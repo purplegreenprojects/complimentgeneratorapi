@@ -1,16 +1,8 @@
-// var letters = ["a","b","c"]
-
-// setInterval(function(){
-// 	var randomNumber = Math.floor(Math.random() * letters.length)
-// 	var letter = letters[randomNumber]
-// 	console.log(letter)
-// }, 1000)
-
 var HTTP = require("http")
 var FS = require("fs")
 var SERVER = HTTP.createServer(pingResponder)
 
-SERVER.listen(65000, function(error){
+SERVER.listen(process.env.PORT, function(error){
 	if (error) {
 		console.log(error)
 	}
