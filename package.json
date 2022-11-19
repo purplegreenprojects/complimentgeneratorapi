@@ -1,0 +1,12 @@
+{
+  "name": "complimentgeneratorapi",
+  "version": "1.0.0",
+  "description": "a tool to generate compliments",
+  "main": "index.js",
+  "scripts": {
+    "start":"node index.js",
+    "test": "echo \"hello world\" && exit 1"
+  },
+  "author": "Elizabeth E. Ford",
+  "license": "ISC"
+}
