@@ -2,6 +2,7 @@ var HTTP = require("http")
 var FS = require("fs")
 var SERVER = HTTP.createServer(pingResponder)
 
+// start up the server
 SERVER.listen(process.env.PORT, function(error){
 	if (error) {
 		console.log(error)
@@ -11,6 +12,7 @@ SERVER.listen(process.env.PORT, function(error){
 	}
 })
 
+// handle incoming request (maybe split into pieces)
 function pingResponder(REQUEST, RESPONSE){
 	var incomingData = ""
 	REQUEST.on("data",function(piece){
@@ -22,14 +24,16 @@ function pingResponder(REQUEST, RESPONSE){
 	console.log("attention! server request made!")
 }
 
+// routing
 function doTheThing(REQUEST, incomingData, RESPONSE){
 
+	// render checks to see "Are you still there?" (in a turret voice) and we say yes (to stay connected)
 	if (REQUEST.url == "/ping"){
 		RESPONSE.end("I ate'nt dead.")
 	} 
 	
+	// if the url has /favicon.ico or /logo at the end, we give them just the favicon
 	else if (REQUEST.url == "/favicon.ico" || REQUEST.url == "/logo.png") {
-		
 		FS.readFile("logo.png", function(error,favicon){
 			if (error) {
 				console.log(error)
@@ -40,13 +44,23 @@ function doTheThing(REQUEST, incomingData, RESPONSE){
 			}
 		})
 	}
+
+	// if the url has /slack at the end, we give them the compliment formulated for slack (4 code blocks)
+	else if (REQUEST.url == "/slack") {
+		var compliment = generateCompliment()
+		compliment = "\`" + compliment.join("\` \`") + "\`"
+		RESPONSE.end(compliment)
+	}
+
+	// if just vanilla url, give them in the form of a fake array - actually a string - as an API
 	else {
-		RESPONSE.end(generateCompliment())
+		RESPONSE.end(JSON.stringify(generateCompliment()))
 	}
 
 }
 
 
+// app logic
 var blurbs = {
 	text1: ["Champ,","Fact:","Everybody says","Wow...", "Check it:","Seriously though,", "Real talk -", "Just saying...", "Self,","Know this:","News alert:","This just in:", "Hey you,", "Excuse me, but", "Experts agree","Ask anyone -", "In my opinion,","Hear ye, hear ye:", "Okay, listen up:","Hey, so...", "Just want to let you know that","It is my duty to inform you that","I need to point out that","You should know that", "I don't know if anyone has ever told you this, but", "Hold up:", "I sincerely hope you're aware that", "You should know that"],
 	text2: ["the mere idea of you","your soul","your hair today","everything you do", "everything you are","your personal style","every thought you think","that sparkle in your eye","your very essence","your presence here", "what you got going on","the essential you","your life's journey","everything that you stand for","that saucy personality", "that brain of yours", "that beautiful mind of yours", "your contribution to the word","your choice of attire","your outfit","the way you roll","the way you showed up today","what you bring to the table","whatever your secret is","everything about you","your wholehearted self","your authentic self", "your kind heart", "your thoughtful contribution","your kindness","your creativity"],
@@ -60,5 +74,5 @@ function generateCompliment() {
 		var blurb = blurbs[i][Math.floor(Math.random() * blurbs[i].length)]
 		compliment.push(blurb)
 	}
-	return JSON.stringify(compliment)
-}	
+	return compliment
+}
