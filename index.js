@@ -3,7 +3,7 @@ var FS = require("fs")
 var SERVER = HTTP.createServer(pingResponder)
 
 // start up the server
-SERVER.listen(process.env.PORT, function(error){
+SERVER.listen(process.env.PORT || 3000, function(error){
 	if (error) {
 		console.log(error)
 	}
@@ -49,7 +49,10 @@ function doTheThing(REQUEST, incomingData, RESPONSE){
 	else if (REQUEST.url == "/slack") {
 		var compliment = generateCompliment()
 		compliment = "\`" + compliment.join("\` \`") + "\`"
-		RESPONSE.end(compliment)
+		RESPONSE.end(JSON.stringify({
+			"response_type": "in_channel",
+			"text": compliment
+		}))
 	}
 
 	// if just vanilla url, give them in the form of a fake array - actually a string - as an API
