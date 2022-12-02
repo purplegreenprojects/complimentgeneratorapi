@@ -49,6 +49,9 @@ function doTheThing(REQUEST, incomingData, RESPONSE){
 	else if (REQUEST.url == "/slack") {
 		var compliment = generateCompliment()
 		compliment = "\`" + compliment.join("\` \`") + "\`"
+
+		RESPONSE.setHeader("Content-Type", "application/json")
+
 		RESPONSE.end(JSON.stringify({
 			"response_type": "in_channel",
 			"text": compliment
